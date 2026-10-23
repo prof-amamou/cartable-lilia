@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cartable du professeur d’informatique</title>
+  <meta name="description" content="Cartable numérique du professeur d’informatique : appel, cahier de texte, cours, devoirs, notes et espace élèves par code de classe.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#2f4fd1">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="assets/js/theme.js"></script>
+</head>
+<body data-view="home">
+  <a class="skip" href="#main">Aller au contenu</a>
+
+  <header id="top">
+    <a class="brand" href="#accueil" aria-label="Retour à l’accueil du cartable">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#2f4fd1"/><path d="M18 24c0-6 6-10 14-10s14 4 14 10v22a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4z" fill="#fdfdff"/><path d="M18 30h28" stroke="#e5484d" stroke-width="3"/><rect x="25" y="35" width="14" height="9" rx="2" fill="#2f4fd1"/></svg>
+      <span><b>Cartable</b><small>du professeur d’informatique</small></span>
+    </a>
+    <div id="top-right"></div>
+  </header>
+
+  <div id="desk">
+    <main id="main" tabindex="-1">
+      <noscript><div class="sheet"><h1>JavaScript est nécessaire</h1><p>Activez JavaScript dans votre navigateur pour utiliser le cartable.</p></div></noscript>
+      <p class="muted" style="padding:12px">Chargement…</p>
+    </main>
+    <div id="winlayer"></div>
+  </div>
+
+  <nav id="taskbar" aria-label="Fenêtres ouvertes" hidden>
+    <div id="taskbar-list"></div>
+    <div class="tb-tools">
+      <button type="button" class="btn btn-sm" id="tb-min">Tout réduire</button>
+      <button type="button" class="btn btn-sm" id="tb-close">Tout fermer</button>
+    </div>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/vendor/supabase.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/wm.js"></script>
+  <script src="assets/js/teacher.js"></script>
+  <script src="assets/js/student.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

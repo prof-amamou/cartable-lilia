@@ -1,0 +1,5 @@
+# Réglages de la fonction Edge utilisée par l'espace élèves.
+# Pour un déploiement avec la CLI Supabase : supabase functions deploy student-access
+# Les élèves n'ont pas de compte : la fonction vérifie elle-même le code de classe.
+[functions.student-access]
+verify_jwt = false
