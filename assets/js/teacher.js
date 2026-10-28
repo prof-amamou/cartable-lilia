@@ -219,8 +219,7 @@
       const [students, sessions] = await Promise.all([
         must(db().from('students').select('id,full_name').eq('class_id', st.classId).order('full_name')),
         must(db().from('attendance').select('id,attendance_date,session_label,entries,created_at').eq('class_id', st.classId)
-          .order('attendance_date', { ascending: false }).order('created_at', { ascending: false })
-      ]);
+          .order('attendance_date', { ascending: false }).order('created_at', { ascending: false }).limit(40)]);
       win.students = students || [];
       win.sessions = sessions || [];
       const ids = win.sessions.map((x) => x.id);
