@@ -250,29 +250,53 @@
         '</section>';
 
       /* Journal : tableau élèves × séances */
-      let journal = '<p class="empty">Aucun appel enregistré pour cette classe.</p>';
-      if (win.sessions.length && win.students.length) {
-        const tot = {};
-        win.students.forEach((s) => {
-          let a = 0, r = 0;
-          win.sessions.forEach((x) => { const v = win.grid[x.id][s.id]; if (v === 'A') a++; if (v === 'R') r++; });
-          tot[s.id] = { a, r };
-        });
-        const head = win.sessions.map((x) =>
-          '<th class="' + (x.id === st.recId ? 'cur' : '') + '"><button type="button" class="hbtn" data-act="view" data-date="' + esc(x.attendance_date) + '" data-label="' + esc(x.session_label || '') +
-          '" title="Ouvrir cet appel">' + esc(CP.fmtDate(x.attendance_date).slice(0, 5)) + '<small>' + esc(x.session_label || String(x.attendance_date).slice(0, 4)) + '</small></button></th>').join('');
-        const body = win.students.map((s) =>
-          '<tr><td>' + esc(s.full_name) + '</td><td>' + tot[s.id].a + '</td><td>' + tot[s.id].r + '</td>' +
-          win.sessions.map((x) => { const v = win.grid[x.id][s.id]; return '<td class="cell-' + (v || '0') + '" title="' + esc(v ? STATUS[v] : 'Non pointé') + '">' + (v || '·') + '</td>'; }).join('') + '</tr>').join('');
-        const foot = ['P', 'A', 'R'].map((k) =>
-          '<tr><td>' + STATUS[k] + 's</td><td></td><td></td>' + win.sessions.map((x) => '<td>' + win.students.filter((s) => win.grid[x.id][s.id] === k).length + '</td>').join('') + '</tr>').join('');
-        journal =
-          '<div class="row np" style="margin-bottom:8px"><span class="muted grow">Séances les plus récentes à gauche. Cliquez sur une date pour rouvrir l’appel.</span>' +
-          '<button type="button" class="btn btn-sm" data-act="csv">Exporter (Excel)</button></div>' +
-          '<div class="tablewrap"><table class="matrix"><thead><tr><th>Élève</th><th title="Absences">Abs.</th><th title="Retards">Ret.</th>' + head + '</tr></thead>' +
-          '<tbody>' + body + '</tbody><tfoot>' + foot + '</tfoot></table></div>';
-      }
+     
+      /* Journal : historique des séances, présenté une séance par ligne */
+      let journal = '<div class="empty"><p>Aucun appel enregistré pour cette classe.</p></div>';
 
+      if (win.sessions.length && win.students.length) {
+        const rows = win.sessions.map((x) => {
+          const counts = { P: 0, A: 0, R: 0, other: 0 };
+
+          win.students.forEach((s) => {
+            const v = win.grid[x.id][s.id];
+            if (v === 'P') counts.P++;
+            else if (v === 'A') counts.A++;
+            else if (v === 'R') counts.R++;
+            else counts.other++;
+          });
+
+          const label = x.session_label || 'Séance sans titre';
+
+          return '<tr>' +
+            '<td><strong>' + esc(CP.fmtDate(x.attendance_date)) + '</strong></td>' +
+            '<td>' + esc(label) + '</td>' +
+            '<td>' + counts.P + '</td>' +
+            '<td>' + counts.A + '</td>' +
+            '<td>' + counts.R + '</td>' +
+            '<td>' + counts.other + '</td>' +
+            '<td><button type="button" class="btn btn-sm btn-primary" ' +
+            'data-act="view" data-date="' + esc(x.attendance_date) +
+            '" data-label="' + esc(x.session_label || '') +
+            '">Consulter / modifier</button></td>' +
+            '</tr>';
+        }).join('');
+
+        journal =
+          '<div class="row np" style="margin-bottom:10px">' +
+            '<span class="muted grow">Les séances les plus récentes apparaissent en premier.</span>' +
+            '<button type="button" class="btn btn-sm" data-act="csv">Exporter (Excel)</button>' +
+          '</div>' +
+          '<div class="tablewrap">' +
+            '<table class="tbl">' +
+              '<thead><tr>' +
+                '<th>Date</th><th>Séance</th><th>Présents</th>' +
+                '<th>Absents</th><th>Retards</th><th>Non pointés</th><th>Action</th>' +
+              '</tr></thead>' +
+              '<tbody>' + rows + '</tbody>' +
+            '</table>' +
+          '</div>';
+      }
       let appLink = '';
       try { appLink = localStorage.getItem('cartable.appLink') || ''; } catch (e) { /* ignoré */ }
       win.body.innerHTML = entry + '<section><h3 class="grp" style="margin-top:4px">Journal d’appel — historique des séances</h3>' + journal + '</section>' +
